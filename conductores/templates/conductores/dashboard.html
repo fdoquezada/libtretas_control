@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1>Dashboard</h1>
+    <p class="welcome-message">Bienvenido al dashboard de conductores.</p>
+
+    <div class="stats-container">
+        <div class="stat-box">
+            <h3>Total Registros</h3>
+            <p>{{ total_registros }}</p>
+        </div>
+        <div class="stat-box">
+            <h3>Total Conductores</h3>
+            <p>{{ total_conductores }}</p>
+        </div>
+    </div>
+
+    <div class="filters-container">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="conductor">Conductor:</label>
+                <select name="conductor" id="conductor">
+                    <option value="">Todos</option>
+                    {% for c in conductores %}
+                    <option value="{{ c.id }}" {% if filtros.conductor|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>
+                        {{ c.nombre }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="semana">Semana:</label>
+                <input type="number" name="semana" id="semana" min="1" max="53" 
+                       value="{{ filtros.semana|default:'' }}">
+            </div>
+
+            <div class="filter-group">
+                <label for="año">Año:</label>
+                <select name="año" id="año">
+                    <option value="">Todos</option>
+                    {% for a in años %}
+                    <option value="{{ a }}" {% if filtros.año|stringformat:"s" == a|stringformat:"s" %}selected{% endif %}>
+                        {{ a }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="entregado">Estado:</label>
+                <select name="entregado" id="entregado">
+                    <option value="">Todos</option>
+                    <option value="True" {% if filtros.entregado == 'True' %}selected{% endif %}>Entregados</option>
+                    <option value="False" {% if filtros.entregado == 'False' %}selected{% endif %}>No Entregados</option>
+                </select>
+            </div>
+
+            <div class="results-count">
+                Mostrando {{ registros.count }} resultado(s)
+                {% if filtros.conductor or filtros.semana or filtros.año or filtros.entregado %}
+                    (filtrados)
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+            <a href="{% url 'conductores/dashboard' %}" class="btn btn-secondary">Limpiar Filtros</a>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rut</th>
+                    <th>Conductor</th>
+                    <th>Semana</th>
+                    <th>Año</th>
+                    <th>Entregado</th>
+                    <th>Fecha de Entrega</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in registros %}
+                <tr>
+                    <td>{{ r.conductor.rut }}</td>
+                    <td>{{ r.conductor }}</td>
+                    <td>{{ r.semana }}</td>
+                    <td>{{ r.año }}</td>
+                    <td>{% if r.entregado %}Sí{% else %}No{% endif %}</td>
+                    <td>{{ r.fecha_entrega|date:"d/m/Y" }}</td>
+                    <td>
+                        <form method="post" action="{% url 'editar_estado' r.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm {% if r.entregado %}btn-danger{% else %}btn-success{% endif %}">
+                                {% if r.entregado %}Marcar No Entregado{% else %}Marcar Entregado{% endif %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No hay registros disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="button-container">
+        <a href="{% url 'conductores/cargar' %}" class="btn btn-primary">Nuevo Registro</a>
+        <a href="{% url 'conductores/cargar_conductor' %}" class="btn btn-success">Nuevo Conductor</a>
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('form').forEach(form => {
+        form.onsubmit = function(e) {
+            if (!confirm('¿Estás seguro de que quieres cambiar el estado?')) {
+                e.preventDefault();
+            }
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %} 
+
+{% block title %}Cargar Registro Semanal{% endblock %}
+
+{% block content %} 
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h1 class="h5 mb-0 text-center">Cargar Registro Semanal</h1>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post" class="form">
+                            {% csrf_token %}
+                            <div class="form-group mb-4">
+                                {{ form.as_p }}
+                            </div>
+                            <div class="button-group d-flex flex-column gap-2">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-save me-2"></i>Guardar
+                                </button>
+                                <a href="{% url 'conductores/dashboard' %}" class="btn btn-secondary w-100">
+                                    <i class="fas fa-times me-2"></i>Cancelar
+                                </a>
+                                <a href="{% url 'conductores/home' %}" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-home me-2"></i>Volver al inicio
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
