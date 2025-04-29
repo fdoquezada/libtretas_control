@@ -325,20 +325,24 @@ footer::after {
 }
 
 /* Estilos para formularios */
-.form-group p {
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.field-group {
     margin-bottom: 1.25rem;
 }
 
-.form-group label {
+.field-group label {
+    display: block;
+    margin-bottom: 0.5rem;
     font-weight: 500;
     color: #495057;
-    margin-bottom: 0.5rem;
-    display: block;
     font-size: 0.9rem;
 }
 
-.form-group input,
-.form-group select {
+.field-group input,
+.field-group select {
     width: 100%;
     padding: 0.5rem 0.75rem;
     border: 1px solid #ced4da;
@@ -347,11 +351,17 @@ footer::after {
     font-size: 0.9rem;
 }
 
-.form-group input:focus,
-.form-group select:focus {
+.field-group input:focus,
+.field-group select:focus {
     border-color: #80bdff;
     outline: 0;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
 }
 
 /* Estilos para la card del formulario */
@@ -401,25 +411,14 @@ footer::after {
     transform: translateY(-1px);
 }
 
-.btn-outline-primary {
-    color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-.btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: white;
-    transform: translateY(-1px);
-}
-
 /* Ajustes responsivos */
 @media (max-width: 768px) {
     .card {
         margin: 0 1rem;
     }
     
-    .form-group input,
-    .form-group select {
+    .field-group input,
+    .field-group select {
         font-size: 16px; /* Evita el zoom en dispositivos móviles */
     }
 }
